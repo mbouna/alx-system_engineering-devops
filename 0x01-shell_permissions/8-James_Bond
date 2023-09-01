@@ -1,0 +1,2 @@
+chmod u-r,g-r hello
+chmod o+rwx hello
