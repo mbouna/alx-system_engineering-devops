@@ -1,35 +1,17 @@
-"""
-subs
-"""
+#!/usr/bin/python3
+"""Module for task 0"""
 
-import requests
 
 def number_of_subscribers(subreddit):
-    """
-    Queries the Reddit API and returns the number of subscribers for a given subreddit.
-    If an invalid subreddit is given, the function returns 0.
-    """
-    
-    url = 'https://www.reddit.com/r/{}/about.json'.format(subreddit)
-    headers = {
-        'User-Agent': 'MyRedditApp/1.0 (by /u/ctbrjg1067)',
-        'Accept': 'application/json'
-    }
+    """Queries the Reddit API and returns the number of subscribers
+    to the subreddit"""
+    import requests
 
-    try:
-        response = requests.get(url, headers=headers, allow_redirects=False)
-        if response.status_code == 200:
-            data = response.json()
-            return data['data'].get('subscribers', 0)
-        elif response.status_code == 403:
-            print("Error: Access forbidden for subreddit '{}'.".format(subreddit))
-            return 0
-        elif response.status_code == 404:
-            print("Error: Subreddit '{}' not found.".format(subreddit))
-            return 0
-        else:
-            print("Error: Received status code {}".format(response.status_code))
-            return 0
-    except requests.RequestException as e:
-        print("RequestException: {}".format(e))
+    sub_info = requests.get("https://www.reddit.com/r/{}/about.json"
+                            .format(subreddit),
+                            headers={"User-Agent": "My-User-Agent"},
+                            allow_redirects=False)
+    if sub_info.status_code >= 300:
         return 0
+
+    return sub_info.json().get("data").get("subscribers")
