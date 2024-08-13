@@ -1,16 +1,13 @@
 #!/usr/bin/python3
-"""Function"""
 import requests
 
 
 def number_of_subscribers(subreddit):
-    """Return"""
-    url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
-    headers = {
-        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
-    }
-    response = requests.get(url, headers=headers, allow_redirects=False)
-    if response.status_code == 404:
-        return 0
-    results = response.json().get("data")
-    return results.get("subscribers")
+    url = 'https://www.reddit.com/r/{}/about.json'.format(subreddit)
+    headers = headers = {'User-Agent': 'My-User-Agent'}
+    with requests.session() as client:
+        info = client.get(url, headers=headers, allow_redirects=False).json()
+        try:
+            return info.get('data', {}).get('subscribers', 0)
+        except Exception:
+            return 0
