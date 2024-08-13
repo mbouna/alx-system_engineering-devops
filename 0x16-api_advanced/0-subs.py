@@ -3,6 +3,7 @@
 
 import requests
 
+
 def number_of_subscribers(subreddit):
     """Queries the Reddit API and returns the number of subscribers
     to the subreddit"""
@@ -13,5 +14,8 @@ def number_of_subscribers(subreddit):
     if response.status_code >= 300:
         return 0
     
-    data = response.json().get("data", {})
-    return data.get("subscribers", 0)
+    try:
+        data = response.json().get("data", {})
+        return data.get("subscribers", 0)
+    except ValueError:
+        return 0
