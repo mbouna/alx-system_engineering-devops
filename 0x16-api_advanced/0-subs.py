@@ -1,21 +1,19 @@
 #!/usr/bin/python3
-"""Module for task 0"""
-
+"""
+    Uses the reddit API to print the number of subscribers of a subreddit
+"""
 import requests
+from sys import argv
 
 
 def number_of_subscribers(subreddit):
-    """Queries the Reddit API and returns the number of subscribers
-    to the subreddit"""
-    url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
-    headers = {"User-Agent": "My-User-Agent"}
-    response = requests.get(url, headers=headers, allow_redirects=False)
-    
-    if response.status_code >= 300:
+    """Get the numbers of subscribers by subreddit given"""
+    url_sred_inf = "https://www.reddit.com/r/{}/about.json".format(subreddit)
+    headers = {'user-agent': 'request'}
+    response = requests.get(url_sred_inf, headers=headers,
+                            allow_redirects=False)
+    if str(response) != "<Response [200]>":
         return 0
-    
-    try:
-        data = response.json().get("data", {})
-        return data.get("subscribers", 0)
-    except ValueError:
-        return 0
+    r_json = response.json()
+    num_subs = r_json.get("data").get("subscribers")
+    return num_subs
