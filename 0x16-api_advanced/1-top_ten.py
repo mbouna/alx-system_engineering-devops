@@ -1,18 +1,33 @@
 #!/usr/bin/python3
-"""Module for task 1"""
+"""
+a simple function to get top 10 hot posts of a subreddit
+"""
+import requests
+
+client_id = "vCoCeS5JDM_uX__qWq9dLA"
+secret = "Xv4PSvskDSyCA_O0tLULNOjr53fQcg"
+auth = requests.auth.HTTPBasicAuth(client_id, secret)
+data = {
+        'grant_type': 'password',
+        'username': 'Majestic_Bluebird490',
+        'password': "0633barcelone@M"
+        }
+headers = {'User-Agent': 'MyAPI'}
+res = requests.post("https://www.reddit.com/api/v1/access_token",
+                    auth=auth, data=data, headers=headers)
+token = res.json()['access_token']
+headers['Authorization'] = 'bearer {}'.format(token)
 
 
 def top_ten(subreddit):
-    """Queries the Reddit API and returns the top 10 hot posts
-    of the subreddit"""
-    import requests
-
-    sub_info = requests.get("https://www.reddit.com/r/{}/hot.json?limit=10"
-                            .format(subreddit),
-                            headers={"User-Agent": "My-User-Agent"},
-                            allow_redirects=False)
-    if sub_info.status_code >= 300:
-        print('None')
+    """ a function to startsending requests to API"""
+    test = requests.get('https://oauth.reddit.com/r/{}/hot'
+                        .format(subreddit), headers=headers)
+    if test.status_code == 200:
+        res = []
+        for post in test.json()["data"]["children"]:
+            res.append(post["data"]["title"])
+        for i in range(10):
+            print(res[i])
     else:
-        [print(child.get("data").get("title"))
-         for child in sub_info.json().get("data").get("children")]
+        return 0

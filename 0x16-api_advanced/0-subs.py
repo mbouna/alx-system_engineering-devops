@@ -1,17 +1,31 @@
-#!/usr/bin/python3
-"""Module for task 0"""
+import requests
 
+def set_config_params():
+    client_id = "vCoCeS5JDM_uX__qWq9dLA"
+    secret = "Xv4PSvskDSyCA_O0tLULNOjr53fQcg"
+    auth = requests.auth.HTTPBasicAuth(client_id, secret)
+    data = {
+        'grant_type': 'password',
+        'username': 'Majestic_Bluebird490',
+        'password': "0633barcelone@M"
+    }
+    headers = {'User-Agent': 'MyAPI'}
+    res = requests.post("https://www.reddit.com/api/v1/access_token",
+                        auth=auth, data=data, headers=headers)
+    print("Response status code:", res.status_code)
+    print("Response JSON:", res.json())
+    if res.status_code == 200 and 'access_token' in res.json():
+        token = res.json()['access_token']
+        headers['Authorization'] = 'bearer {}'.format(token)
+        return headers
+    else:
+        raise Exception("Failed to obtain access token. Response: {}".format(res.json()))
 
 def number_of_subscribers(subreddit):
-    """Queries the Reddit API and returns the number of subscribers
-    to the subreddit"""
-    import requests
-
-    sub_info = requests.get("https://www.reddit.com/r/{}/about.json"
-                            .format(subreddit),
-                            headers={"User-Agent": "My-User-Agent"},
-                            allow_redirects=False)
-    if sub_info.status_code >= 300:
+    """A function to start sending requests to API."""
+    headers = set_config_params()
+    test = requests.get('https://oauth.reddit.com/r/{}/about'.format(subreddit), headers=headers)
+    if test.status_code == 200:
+        return test.json()["data"]["subscribers"]
+    else:
         return 0
-
-    return sub_info.json().get("data").get("subscribers")
