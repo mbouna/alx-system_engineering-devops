@@ -1,3 +1,4 @@
+from sys import argv
 import requests
 
 subreddit = argv[1]
