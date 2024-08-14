@@ -17,7 +17,7 @@ def number_of_subscribers(subreddit):
     headers = {'User-Agent': 'MyAPI'}
     res = requests.post("https://www.reddit.com/api/v1/access_token",
                         auth=auth, data=data, headers=headers)
-    print(res)
+
     token = res.json()['access_token']
     headers['Authorization'] = 'bearer {}'.format(token)
 
