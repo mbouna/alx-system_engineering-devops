@@ -1,4 +1,3 @@
-
 import requests
 
 client_id = "vCoCeS5JDM_uX__qWq9dLA"
@@ -18,23 +17,14 @@ headers['Authorization'] = 'bearer {}'.format(token)
 
 def number_of_subscribers(subreddit):
     """ a function to startsending requests to API"""
-    resp = requests.get('https://oauth.reddit.com/r/{}/about'
+    test = requests.get('https://oauth.reddit.com/r/{}/about'
                         .format(subreddit), headers=headers)
+    if test.status_code != 200:
+        print("Failed to get data for subreddit {subreddit}, status code: {test.status_code}")
+        return "Failed to get data"
 
-    if (resp.status_code != 200):
-        return 0
+    json_response = test.json()
+    if 'data' in json_response and 'subscribers' in json_response['data']:
+        return json_response['data']['subscribers']
+    return "No subscribers data found"
 
-    try:
-        json_resp = resp.json()
-
-    except ValueError:
-        return 0
-
-    data = json_resp.get('data')
-
-    if data:
-        subs = data.get('subscribers')
-        if subs:
-            return subs
-
-    return 0
