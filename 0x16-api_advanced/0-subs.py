@@ -19,10 +19,8 @@ def number_of_subscribers(subreddit):
     """ a function to startsending requests to API"""
     test = requests.get('https://oauth.reddit.com/r/{}/about'
                         .format(subreddit), headers=headers)
-    if test.status_code != 200:
-        return 0
-    json_response = test.json()
-    if 'data' in json_response and 'subscribers' in json_response['data']:
-        return (json_response["data"]["subscribers"])
+    if test.status_code == 200:
+        return (test.json()["data"]["subscribers"])
     else:
         return 0
+
