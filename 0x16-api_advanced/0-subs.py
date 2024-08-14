@@ -1,7 +1,4 @@
-#!/usr/bin/python3
-"""
-a simple function to get number of subs of subreddit
-"""
+
 import requests
 
 client_id = "vCoCeS5JDM_uX__qWq9dLA"
@@ -21,11 +18,23 @@ headers['Authorization'] = 'bearer {}'.format(token)
 
 def number_of_subscribers(subreddit):
     """ a function to startsending requests to API"""
-    test = requests.get('https://oauth.reddit.com/r/{}/about'
+    resp = requests.get('https://oauth.reddit.com/r/{}/about'
                         .format(subreddit), headers=headers)
-    if test.status_code != 200:
+
+    if (resp.status_code != 200):
         return 0
-    json_response = test.json()
-    if 'data' in json_response and 'subscribers' in json_response['data']:
-        return json_response['data']['subscribers']
+
+    try:
+        json_resp = resp.json()
+
+    except ValueError:
+        return 0
+
+    data = json_resp.get('data')
+
+    if data:
+        subs = data.get('subscribers')
+        if subs:
+            return subs
+
     return 0
