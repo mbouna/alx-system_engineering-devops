@@ -1,5 +1,6 @@
 import requests
 
+subreddit = argv[1]
 def set_config_params():
     client_id = "vCoCeS5JDM_uX__qWq9dLA"
     secret = "Xv4PSvskDSyCA_O0tLULNOjr53fQcg"
