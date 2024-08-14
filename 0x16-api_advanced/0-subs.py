@@ -17,10 +17,10 @@ headers['Authorization'] = 'bearer {}'.format(token)
 
 def number_of_subscribers(subreddit):
     """ a function to startsending requests to API"""
-    test = requests.get('https://oauth.reddit.com/r/{}/about'
+    response = requests.get('https://oauth.reddit.com/r/{}/about'
                         .format(subreddit), headers=headers)
-    if test.status_code == 200:
-        return (test.json()["data"]["subscribers"])
+    if response.status_code == 200:
+    	return response.json().get("data", {}).get("subscribers", 0)
     else:
-        return 0
+    	return 0
 
