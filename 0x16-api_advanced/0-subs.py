@@ -1,28 +1,17 @@
 #!/usr/bin/python3
-"""script for parsing web data from an api
-"""
-import json
-import requests
-import sys
+"""Module for task 0"""
 
 
 def number_of_subscribers(subreddit):
-    """api call to reddit to get the number of subscribers
-    """
-    base_url = 'https://www.reddit.com/r/'
-    headers = {
-        'User-Agent': 'My-User-Agent'}
-    # grab info about all users
-    url = base_url + '{}/about.json'.format(subreddit)
-    response = requests.get(url, headers=headers)
-    resp = json.loads(response.text)
+    """Queries the Reddit API and returns the number of subscribers
+    to the subreddit"""
+    import requests
 
-    try:
-        # grab the info about the users' tasks
-        data = resp.get('data')
-        subscribers = data.get('subscribers')
-    except:
+    sub_info = requests.get("https://www.reddit.com/r/{}/about.json"
+                            .format(subreddit),
+                            headers={"User-Agent": "My-User-Agent"},
+                            allow_redirects=False)
+    if sub_info.status_code >= 300:
         return 0
-    if subscribers is None:
-        return 0
-    return int(subscribers)
+
+    return sub_info.json().get("data").get("subscribers")
