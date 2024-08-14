@@ -20,11 +20,9 @@ def number_of_subscribers(subreddit):
     test = requests.get('https://oauth.reddit.com/r/{}/about'
                         .format(subreddit), headers=headers)
     if test.status_code != 200:
-        print("Failed to get data for subreddit {subreddit}, status code: {test.status_code}")
-        return "Failed to get data"
-
+        return 0
     json_response = test.json()
     if 'data' in json_response and 'subscribers' in json_response['data']:
-        return json_response['data']['subscribers']
-    return "No subscribers data found"
-
+        return (json_response["data"]["subscribers"])
+    else:
+        return 0
