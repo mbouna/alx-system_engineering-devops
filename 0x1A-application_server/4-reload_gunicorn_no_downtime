@@ -1,2 +1,17 @@
-#!/usr/bin/env bash
-pkill -HUP gunicorn
+#!/bin/bash
+
+# Find the master process ID of Gunicorn
+MASTER_PID=$(ps aux | grep '[g]unicorn' | awk '{print $2}')
+
+# Check if the Gunicorn process is running
+if [ -z "$MASTER_PID" ]; then
+    echo "Gunicorn is not running."
+    exit 1
+fi
+
+echo "Reloading Gunicorn..."
+
+# Send the HUP signal to the master process for a graceful restart
+kill -HUP $MASTER_PID
+
+echo "Gunicorn has been reloaded."
