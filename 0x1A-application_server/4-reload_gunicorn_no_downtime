@@ -1,9 +1,3 @@
 #!/usr/bin/env bash
-
-# Get the process ID of the Gunicorn master
-MASTER_PID=$(pgrep gunicorn)
-
-# Gracefully restart the Gunicorn master
-kill -s HUP "$MASTER_PID"
-
-echo "Gunicorn master restarted gracefully"
+# Gracefully reloads Gunicorn
+pgrep -f '[g]unicorn' | xargs kill -HUP
