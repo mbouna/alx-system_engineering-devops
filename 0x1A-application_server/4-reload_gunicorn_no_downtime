@@ -1,9 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# This script reloads Gunicorn in a graceful way.
 
-# Rechercher tous les processus master Gunicorn
-for pid in $(ps aux | grep '[g]unicorn' | grep 'master' | awk '{print $2}'); do
-  echo "Rechargement gracieux du processus Gunicorn avec PID: $pid"
-  kill -HUP $pid
+# Retrieve master gunicorn process PID
+master=$(pgrep gunicorn | head -n 1)
+
+# Use master process PID to retrieve a list of worker PIDs
+workers=($(pgrep -P "$master"))
+
+# For each worker PID, send SIGHUP signal to restart process
+for worker in "${workers[@]}"
+do
+    kill -SIGTERM "$worker"
 done
-
-echo "Rechargement terminé."
