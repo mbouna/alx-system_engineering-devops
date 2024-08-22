@@ -1,33 +1,17 @@
-#!/usr/bin/env bash
-# Bash script to reload Gunicorn in a graceful way
-# shellcheck disable=SC2009
+#!/bin/bash
 
-sudo systemctl show -p MainPID --value gunicorn | xargs kill -HUP
+# Trouver l'ID du processus maître de Gunicorn
+MASTER_PID=$(ps aux | grep '[g]unicorn' | awk '{print $2}')
 
-# ps aux | grep gunicorn | grep api.v1.app:app | awk '{ print $2 }' | xargs kill -HUP
+# Vérifier si le processus Gunicorn est en cours d'exécution
+if [ -z "$MASTER_PID" ]; then
+    echo "Gunicorn n'est pas en cours d'exécution."
+    exit 1
+fi
 
-# sudo kill -HUP "$(ps -C gunicorn ch -o pid | head -n 1)"
+echo "Rechargement de Gunicorn..."
 
-# PID=$(pgrep gunicorn | head -n 1)
-# kill -HUP "$PID"
+# Envoyer le signal HUP au processus maître pour un redémarrage gracieux
+kill -HUP $MASTER_PID
 
-# master_pid=$(sudo systemctl show -p MainPID --value gunicorn)
-
-# sudo kill -HUP "$master_pid"
-
-# Get the PID of Gunicorn master processes
-# PIDS=$(ps auxf | grep gunicorn | grep ' Ss' | awk '{ print $2 }')
-# pgrep gunicorn | xargs -I {} kill -HUP {}
-# ps aux | grep gunicorn | awk '{ print $2 }' | xargs kill -HUP
-# systemctl status gunicorn | grep -oE 'Main PID: [0-9]+' | cut -d ' ' -f3 | xargs kill -HUP
-# Check if Gunicorn is running
-# if [ -z "$PIDS" ]; then
-#    exit 1
-#fi
-# PID=$(pgrep gunicorn)
-#kill -s HUP "$PID"
-# Send HUP signal to Gunicorn master processes
-#for PID in $PIDS
-#do
-#    kill -HUP "$PID"
-#done
+echo "Gunicorn a été rechargé."
