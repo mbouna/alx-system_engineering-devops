@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# Bash script to reload Gunicorn in a graceful way
+# shellcheck disable=SC2009
+
+sudo systemctl show -p MainPID --value gunicorn | xargs kill -HUP
+
+# ps aux | grep gunicorn | grep api.v1.app:app | awk '{ print $2 }' | xargs kill -HUP
+
+# sudo kill -HUP "$(ps -C gunicorn ch -o pid | head -n 1)"
+
+# PID=$(pgrep gunicorn | head -n 1)
+# kill -HUP "$PID"
+
+# master_pid=$(sudo systemctl show -p MainPID --value gunicorn)
+
+# sudo kill -HUP "$master_pid"
+
+# Get the PID of Gunicorn master processes
+# PIDS=$(ps auxf | grep gunicorn | grep ' Ss' | awk '{ print $2 }')
+# pgrep gunicorn | xargs -I {} kill -HUP {}
+# ps aux | grep gunicorn | awk '{ print $2 }' | xargs kill -HUP
+# systemctl status gunicorn | grep -oE 'Main PID: [0-9]+' | cut -d ' ' -f3 | xargs kill -HUP
+# Check if Gunicorn is running
+# if [ -z "$PIDS" ]; then
+#    exit 1
+#fi
+# PID=$(pgrep gunicorn)
+#kill -s HUP "$PID"
+# Send HUP signal to Gunicorn master processes
+#for PID in $PIDS
+#do
+#    kill -HUP "$PID"
+#done
