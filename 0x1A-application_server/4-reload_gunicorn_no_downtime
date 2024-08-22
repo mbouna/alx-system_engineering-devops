@@ -1,17 +1,3 @@
-#!/bin/bash
-
-# Trouver l'ID du processus maître de Gunicorn
-MASTER_PID=$(ps aux | grep '[g]unicorn' | awk '{print $2}')
-
-# Vérifier si le processus Gunicorn est en cours d'exécution
-if [ -z "$MASTER_PID" ]; then
-    echo "Gunicorn n'est pas en cours d'exécution."
-    exit 1
-fi
-
-echo "Rechargement de Gunicorn..."
-
-# Envoyer le signal HUP au processus maître pour un redémarrage gracieux
-kill -HUP $MASTER_PID
-
-echo "Gunicorn a été rechargé."
+#!/usr/bin/env bash
+# Gracefully reloads Gunicorn
+pgrep -f '[g]unicorn' | xargs kill -HUP
