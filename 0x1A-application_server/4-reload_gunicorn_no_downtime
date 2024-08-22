@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-pgrep gunicorn | xargs kill -HUP
+pkill -HUP gunicorn
